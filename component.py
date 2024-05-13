@@ -1,13 +1,22 @@
 from port import Port
 from tools.component_tools import Component as tritoneComponent
-LAMBDA = 1.73e-9 # Decay constant for tritium
+
+LAMBDA = 1.73e-9  # Decay constant for tritium
+
 
 class Component:
     """
     Represents a component in a fuel cycle system.
     """
 
-    def __init__(self, name, residence_time, initial_inventory=0, tritium_source=0, non_radioactive_loss=1e-4):
+    def __init__(
+        self,
+        name,
+        residence_time,
+        initial_inventory=0,
+        tritium_source=0,
+        non_radioactive_loss=1e-4,
+    ):
         """
         Initializes a Component object.
 
@@ -19,8 +28,12 @@ class Component:
         """
         self.name = name
         self.residence_time = residence_time
-        self.input_ports = {}  # Dictionary where the key is the port name and the value is the port object
-        self.output_ports = {}  # Dictionary where the key is the port name and the value is the port object
+        self.input_ports = (
+            {}
+        )  # Dictionary where the key is the port name and the value is the port object
+        self.output_ports = (
+            {}
+        )  # Dictionary where the key is the port name and the value is the port object
         self.tritium_inventory = initial_inventory
         self.tritium_source = tritium_source
         self.non_radioactive_loss = non_radioactive_loss
@@ -93,7 +106,7 @@ class Component:
             removed_amount = self.tritium_inventory
             self.tritium_inventory = 0
             return removed_amount
-        
+
     def get_inflow(self):
         """
         Calculates the total inflow rate to the component.
@@ -104,8 +117,8 @@ class Component:
         inflow = 0
         for port in self.input_ports.values():
             inflow += port.flow_rate
-        return inflow   
-        
+        return inflow
+
     def get_outflow(self):
         """
         Calculates the outflow rate from the component.
@@ -114,7 +127,7 @@ class Component:
             float: The outflow rate.
         """
         return self.tritium_inventory / self.residence_time
-    
+
     def calculate_inventory_derivative(self):
         """
         Calculates the derivative of the tritium inventory with respect to time.
@@ -124,10 +137,15 @@ class Component:
         """
         inflow = self.get_inflow()
         outflow = self.get_outflow()
-        decay = self.tritium_inventory * LAMBDA 
-        dydt = inflow - outflow * (1 + self.non_radioactive_loss) - decay + self.tritium_source
+        decay = self.tritium_inventory * LAMBDA
+        dydt = (
+            inflow
+            - outflow * (1 + self.non_radioactive_loss)
+            - decay
+            + self.tritium_source
+        )
         return dydt
-    
+
     def update_inventory(self, new_value):
         """
         Updates the tritium inventory of the component.
@@ -137,18 +155,20 @@ class Component:
         """
         self.tritium_inventory = new_value
 
+
 class TritoneComponent(Component, tritoneComponent):
     # Multiple inheritance from Component and tritoneComponent
-    def __init__(self, name, L, fluid, membrane):
+    def __init__(self, name, geometry, fluid, membrane):
         # TODO: inherit these attributes from tritoneComponent
         self.volume = 1e3
         self.flow_rate = 1e5
-        Component.__init__(self, name, residence_time=1) 
-        tritoneComponent.__init__(self, c_in = 0, L=L, fluid=fluid, membrane=membrane)
+        Component.__init__(self, name, residence_time=1)
+        tritoneComponent.__init__(
+            self, c_in=0, geometry=geometry, fluid=fluid, membrane=membrane
+        )
         # self.c_in = self.get_inflow() / self.flow_rate + 1e-12 # TODO: use a better initialisation
 
     def get_outflow(self):
         self.get_efficiency()
         self.outlet_c_comp()
         return self.c_out * self.flow_rate
-
