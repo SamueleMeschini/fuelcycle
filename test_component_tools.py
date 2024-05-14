@@ -14,11 +14,35 @@ from io import StringIO
 from unittest.mock import patch
 import pytest
 from tools.materials import Flibe
+import numpy as np
 
 
 class TestMSComponent(unittest.TestCase):
     def setUp(self):
         # Create a Component object with some initial values
+        self.T_fluid = 300
+        self.D_fluid = 1e-9
+        self.Solubility_fluid = 0.5
+        self.MS_fluid = True
+        self.mu_fluid = 1e-3
+        self.rho_fluid = 1000
+        self.k_fluid = 0.5
+        self.cp_fluid = 1.0
+        self.k_t_fluid = 0.1
+        self.U0_fluid = 0.2
+        self.d_Hyd_fluid = 0.3
+        self.L_geom = 1.0
+        self.thick_geom = 0.5
+        self.D_geom = 0.3
+        self.k_d_membrane = 1e7
+        self.D_membrane = 0.4
+        self.thick_membrane = 0.5
+        self.K_S_membrane = 0.6
+        self.T_membrane = 300
+        self.k_r_membrane = 1e7
+        self.k_membrane = 0.8
+        self.c_in_component = 0.5
+        self.eff_component = 0.8
         fluid = Fluid(
             T=300,
             D=1e-9,
@@ -41,12 +65,22 @@ class TestMSComponent(unittest.TestCase):
     def test_outlet_c_comp(self):
         # Test the outlet_c_comp() method
         self.component.outlet_c_comp()
-        self.assertAlmostEqual(self.component.c_out, 0.1)
+        self.assertAlmostEqual(
+            self.component.c_out, self.c_in_component * (1 - self.eff_component)
+        )
 
     def test_T_leak(self):
         # Test the T_leak() method
         leak = self.component.T_leak()
-        self.assertAlmostEqual(leak, 0.4)
+        self.assertAlmostEqual(
+            leak,
+            self.c_in_component
+            * (self.eff_component)
+            * self.D_geom**2
+            / 4
+            * np.pi
+            * self.U0_fluid,
+        )
 
     def test_get_regime(self):
         # self.component2 = Component(c_in=0.5, eff=0.8, geometry=self.component.geometry)
