@@ -13,9 +13,9 @@ import numpy as np
 # TODO: pulsed source and fp 
 
 LAMBDA = 1.73e-9 # Decay constant for tritium
-AF = 0.95
+AF = 0.7
 N_burn = 9.3e-7 # Tritium burn rate in the plasma
-TBR = 1.06
+TBR = 1.062
 tau_bb = 1.25 * 3600
 tau_fc =  3600
 tau_tes = 24 * 3600
@@ -31,10 +31,10 @@ pulse_period = 1800
 f_dir = 0.3
 f_iss_ds = 0.1
 
-I_startup = 1.1
+I_startup = 1.3
 TBE = 0.02
 tes_efficiency = 0.9
-final_time = 2.1 * 3600 * 24 * 365 # NB: longer than doubling time
+final_time = 2.1 * 3600 * 24 * 365# NB: longer than doubling time
 hx_to_fw = 0.33
 hx_to_div = 0.33
 hx_to_ds = 1e-4
@@ -47,7 +47,7 @@ I_reserve = N_burn / TBE * q * t_res
 
 # Define components
 fueling_system = FuelingSystem("Fueling System", N_burn, TBE, AF, pulse_period, initial_inventory=I_startup)
-BB = BreedingBlanket("BB", tau_bb, initial_inventory=0, N_burn = N_burn, TBR = TBR)
+BB = BreedingBlanket(name = "BB", residence_time= tau_bb, initial_inventory=0, N_burn = N_burn, TBR = TBR, AF = AF, pulse_period = pulse_period)
 FW = Component("FW", residence_time = tau_FW)
 divertor = Component("Divertor", residence_time = tau_div)
 fuel_cleanup = Component("Fuel cleanup", tau_fc)

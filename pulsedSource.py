@@ -37,6 +37,6 @@ class PulsedSource:
         """
         pulse_time = self.get_current_time() % self.pulse_period
         if pulse_time < self.pulse_duration:
-            return self.amplitude  # Pulse on
+            return self.amplitude # Pulse on
         else:
-            return 0.0  # Pulse off
+            return 0. # Pulse off

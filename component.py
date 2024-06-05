@@ -24,6 +24,8 @@ class Component:
         self.tritium_inventory = initial_inventory
         self.tritium_source = tritium_source
         self.non_radioactive_loss = non_radioactive_loss
+        self.inflow = []
+        self.outflow = []
         # super().__init__()
 
     def add_input_port(self, port_name, incoming_fraction=1.0):
@@ -115,6 +117,13 @@ class Component:
         """
         return self.tritium_inventory / self.residence_time
     
+    def store_flows(self):
+        """
+        Stores the inflow and outflow rates of the component.
+        """
+        self.inflow.append(self.get_inflow())
+        self.outflow.append(self.get_outflow())
+
     def calculate_inventory_derivative(self):
         """
         Calculates the derivative of the tritium inventory with respect to time.

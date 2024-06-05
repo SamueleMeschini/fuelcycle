@@ -41,12 +41,16 @@ class Simulate:
             print(f"Doubling time: {self.doubling_time} \n")
             print('Startup inventory is: {} \n'.format(y[0][0]))
             if (np.array(self.y)[:,0] - self.I_reserve < -tolerance).any(): # Increaase startup inventory if at any point the tritium inventory in the Fueling System component is below zero
+                # self.y.pop() # remove the last element of y whose time is greater than the final time
+                # return t,y
                 difference = np.min(np.array(self.y)[:,0] - self.I_reserve)
                 print("Error: Tritium inventory in Fueling System is below zero. Difference is {} kg".format(difference))
                 self.update_I_startup(difference)
                 print(f"Updated I_startup to {self.I_startup}")
                 self.restart()
             elif self.doubling_time >= self.target_doubling_time or np.isnan(self.doubling_time):
+                # self.y.pop() # remove the last element of y whose time is greater than the final time
+                # return t,y
                 self.restart()
                 self.components['BB'].TBR += self.TBRr_accuracy
                 print('Updated TBR at {}. Production is now {}'.format(self.components['BB'].TBR, self.components['BB'].tritium_source))
@@ -119,6 +123,8 @@ class Simulate:
         self.dt = self.initial_step_size
         for component, initial_condition in zip(self.components.values(), self.initial_conditions.values()):
             component.tritium_inventory = initial_condition
+            component.inflow = []
+            component.outflow = []
         self.y = [list(self.initial_conditions.values())]
 
     def forward_euler(self):
@@ -132,8 +138,11 @@ class Simulate:
         t = 0
         print(f'Initial inventories = {self.y[0]} kg')
         while t < self.final_time:
+            for component in self.components.values():
+                component.store_flows()
             # Set time for the pulsed source in plasma
             self.components['Plasma'].set_current_time(t)
+            self.components['Fueling System'].set_current_time(t)
             if abs(t % self.interval) < 10:
                 print(f"Percentage completed = {abs(t - self.final_time)/self.final_time * 100:.1f}%", end='\r')
             dydt = self.f(self.y[-1])
