@@ -15,7 +15,7 @@ import numpy as np
 LAMBDA = 1.73e-9 # Decay constant for tritium
 AF = 0.7
 N_burn = 9.3e-7 # Tritium burn rate in the plasma
-TBR = 1.062
+TBR = 1.067
 tau_bb = 1.25 * 3600
 tau_fc =  3600
 tau_tes = 24 * 3600
@@ -31,7 +31,7 @@ pulse_period = 1800
 f_dir = 0.3
 f_iss_ds = 0.1
 
-I_startup = 1.3
+I_startup = 1.
 TBE = 0.02
 tes_efficiency = 0.9
 final_time = 2.1 * 3600 * 24 * 365# NB: longer than doubling time
@@ -135,7 +135,7 @@ component_map.connect_ports(ISS, port34, fueling_system, port7)
 component_map.connect_ports(ISS, port36, DS, port35)
 
 component_map.print_connected_map()
-visualize_connections(component_map)
+# visualize_connections(component_map)
 print(f'Startup inventory is: {fueling_system.tritium_inventory}')
 simulation = Simulate(dt=0.01, final_time=final_time, I_reserve=I_reserve, component_map=component_map)
 t, y = simulation.run()

@@ -9,7 +9,7 @@ class BreedingBlanket(Component, PulsedSource):
 
         self.N_burn = N_burn
         self._TBR = TBR  # Initialize _TBR directly
-        self.tritium_source = self.N_burn * self.TBR
+        self.tritium_source = self.N_burn * self.TBR * self.get_pulse()  # Initialize tritium_source directly
 
     @property
     def TBR(self):
@@ -18,6 +18,6 @@ class BreedingBlanket(Component, PulsedSource):
     @TBR.setter
     def TBR(self, value):
         self._TBR = value
-        self.tritium_source = self.N_burn * self.TBR
+        self.tritium_source = self.N_burn * self.TBR * self.get_pulse()
 
 
