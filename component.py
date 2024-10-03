@@ -7,7 +7,7 @@ class Component:
     Represents a component in a fuel cycle system.
     """
 
-    def __init__(self, name, residence_time, initial_inventory=0, tritium_source=0, non_radioactive_loss=1e-4):
+    def __init__(self, name, residence_time, initial_inventory=1e-12, tritium_source=0, non_radioactive_loss=1e-4):
         """
         Initializes a Component object.
 
