@@ -171,9 +171,11 @@ class Component:
 
 class TritoneComponent(Component, tritoneComponent):
     # Multiple inheritance from Component and tritoneComponent
-    def __init__(self, name, fluid, membrane, geometry, residence_time):
+    def __init__(self, name, fluid, membrane, geometry):
         # TODO: inherit these attributes from tritoneComponent
         self.flow_rate = 2e3 # kg/s
+        residence_time = geometry.L/fluid.U0
+        print(f"Residence time = {residence_time}")
         Component.__init__(self, name, residence_time=residence_time, non_radioactive_loss=0)
         tritoneComponent.__init__(
             self,
@@ -201,19 +203,20 @@ class TritoneComponent(Component, tritoneComponent):
         # else:
         self.use_analytical_efficiency()
         self.outlet_c_comp()
+
         for port in self.output_ports.values():
             if "HX" in port.name:
                 port.outgoing_fraction = 1 - self.eff
             elif "Membrane" in port.name:
                 port.outgoing_fraction = self.eff
         # print(f"Efficiency = {self.eff}")
-        # print(f"Outlet concentration = {self.c_out}")
+        # print(f"Outlet concentration = {self.c_out/(1 - self.eff)}")
         # print(f"Inlet concentration = {self.c_in}")
         # print(f"Outflow rate = {self.tritium_inventory / self.residence_time}")
         # print(f"Total inflow rate = {self.get_inflow()}")
+        # print(f"outflow with eff = {self.c_out * self.flow_rate/ (1 - self.eff)}")
         # return self.get_inflow()  # The outflow is always the total outflow, otherwise the flow to the membrane would be wrong
         return self.tritium_inventory / self.residence_time
-
         # return self.c_out * self.flow_rate / (1 - self.eff)  # The outflow is always the total outflow, otherwise the flow to the membrane would be wrong
 
     def update_inventory(self, new_value):

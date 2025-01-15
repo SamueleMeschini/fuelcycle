@@ -16,7 +16,7 @@ import tools.materials as materials
 LAMBDA = 1.73e-9 # Decay constant for tritium
 AF = 0.7
 N_burn = 9.3e-7 * AF # Tritium burn rate in the plasma adjusted for AF - THIS IS IMPACTING THE RESERVE INVENTORY
-TBR = 1.073
+TBR = 1.07
 tau_bb = 1.25 * 3600
 tau_fc =  3600
 tau_tes = 24 * 3600
@@ -64,7 +64,7 @@ FW = Component("FW", residence_time = tau_FW)
 divertor = Component("Divertor", residence_time = tau_div)
 fuel_cleanup = Component("Fuel cleanup", tau_fc)
 plasma = Plasma("Plasma", N_burn, TBE, fp_fw=fp_fw, fp_div=fp_div)   
-TES = TritoneComponent("PAV", geometry = geometry, fluid=flibe, membrane=Steel, residence_time=tau_tes)
+TES = TritoneComponent("PAV", geometry = geometry, fluid=flibe, membrane=Steel)
 # TES = Component("TES", residence_time = tau_tes)
 HX = Component("HX", residence_time = tau_HX)
 DS = Component("DS", residence_time = tau_ds)
@@ -162,7 +162,7 @@ simulation = Simulate(dt=0.01, final_time=final_time, I_reserve=I_reserve, compo
 t, y = simulation.run()
 # np.savetxt('tritium_inventory.txt', [t,y], delimiter=',')
 fig,ax = plt.subplots()
-ax.loglog(t, y)
+ax.loglog(t[::100], y[::100])
 ax.legend(component_map.components.keys())
 plt.show()
 print(f"Component inventories: {component_map.components.keys()}: {y[-1]}\n")
