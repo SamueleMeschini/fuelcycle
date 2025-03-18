@@ -43,10 +43,40 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Component</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#breeding-blanket">Breeding Blanket</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#fueling-system">Fueling System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#plasma">Plasma</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Component</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.openfc.components.component.Component"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.add_input_port"><code class="docutils literal notranslate"><span class="pre">Component.add_input_port()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.add_output_port"><code class="docutils literal notranslate"><span class="pre">Component.add_output_port()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.add_tritium"><code class="docutils literal notranslate"><span class="pre">Component.add_tritium()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.calculate_inventory_derivative"><code class="docutils literal notranslate"><span class="pre">Component.calculate_inventory_derivative()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.get_inflow"><code class="docutils literal notranslate"><span class="pre">Component.get_inflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.get_outflow"><code class="docutils literal notranslate"><span class="pre">Component.get_outflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.remove_tritium"><code class="docutils literal notranslate"><span class="pre">Component.remove_tritium()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.store_flows"><code class="docutils literal notranslate"><span class="pre">Component.store_flows()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.component.Component.update_inventory"><code class="docutils literal notranslate"><span class="pre">Component.update_inventory()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#breeding-blanket">Breeding Blanket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.openfc.components.breedingBlanket.BreedingBlanket"><code class="docutils literal notranslate"><span class="pre">BreedingBlanket</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#fueling-system">Fueling System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.openfc.components.fuelingSystem.FuelingSystem"><code class="docutils literal notranslate"><span class="pre">FuelingSystem</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.fuelingSystem.FuelingSystem.get_outflow"><code class="docutils literal notranslate"><span class="pre">FuelingSystem.get_outflow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#plasma">Plasma</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.openfc.components.plasma.Plasma"><code class="docutils literal notranslate"><span class="pre">Plasma</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.plasma.Plasma.calculate_inventory_derivative"><code class="docutils literal notranslate"><span class="pre">Plasma.calculate_inventory_derivative()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.components.plasma.Plasma.get_outflow"><code class="docutils literal notranslate"><span class="pre">Plasma.get_outflow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#componentmap">ComponentMap</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#src.openfc.componentMap.ComponentMap"><code class="docutils literal notranslate"><span class="pre">ComponentMap</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#src.openfc.componentMap.ComponentMap.add_component"><code class="docutils literal notranslate"><span class="pre">ComponentMap.add_component()</span></code></a></li>
@@ -66,8 +96,24 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#simulate">Simulate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#tools">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#simulate">Simulate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.openfc.simulate.Simulate"><code class="docutils literal notranslate"><span class="pre">Simulate</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.adaptive_timestep"><code class="docutils literal notranslate"><span class="pre">Simulate.adaptive_timestep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.compute_doubling_time"><code class="docutils literal notranslate"><span class="pre">Simulate.compute_doubling_time()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.f"><code class="docutils literal notranslate"><span class="pre">Simulate.f()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.forward_euler"><code class="docutils literal notranslate"><span class="pre">Simulate.forward_euler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.restart"><code class="docutils literal notranslate"><span class="pre">Simulate.restart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.run"><code class="docutils literal notranslate"><span class="pre">Simulate.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.update_I_startup"><code class="docutils literal notranslate"><span class="pre">Simulate.update_I_startup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.openfc.simulate.Simulate.update_timestep"><code class="docutils literal notranslate"><span class="pre">Simulate.update_timestep()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#tools">Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.openfc.tools.utils.visualize_connections"><code class="docutils literal notranslate"><span class="pre">visualize_connections()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -96,15 +142,159 @@
              
   <section id="component">
 <h1>Component<a class="headerlink" href="#component" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.openfc.components.component.</span></span><span class="sig-name descname"><span class="pre">Component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residence_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_inventory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tritium_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_radioactive_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component" title="Link to this definition"></a></dt>
+<dd><p>Represents a component in a fuel cycle system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.add_input_port">
+<span class="sig-name descname"><span class="pre">add_input_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incoming_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.add_input_port" title="Link to this definition"></a></dt>
+<dd><p>Adds an input port to the component.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>port_name (str): The name of the input port.
+incoming_fraction (float, optional): The fraction of incoming flow to the port. Defaults to 1.0.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Port: The created input port object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.add_output_port">
+<span class="sig-name descname"><span class="pre">add_output_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgoing_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.add_output_port" title="Link to this definition"></a></dt>
+<dd><p>Adds an output port to the component.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>port_name (str): The name of the output port.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Port: The created output port object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.add_tritium">
+<span class="sig-name descname"><span class="pre">add_tritium</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.add_tritium" title="Link to this definition"></a></dt>
+<dd><p>Adds tritium to the component’s inventory.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>amount (float): The amount of tritium to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.calculate_inventory_derivative">
+<span class="sig-name descname"><span class="pre">calculate_inventory_derivative</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.calculate_inventory_derivative" title="Link to this definition"></a></dt>
+<dd><p>Calculates the derivative of the tritium inventory with respect to time.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: The derivative of the tritium inventory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.get_inflow">
+<span class="sig-name descname"><span class="pre">get_inflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.get_inflow" title="Link to this definition"></a></dt>
+<dd><p>Calculates the total inflow rate to the component.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: The total inflow rate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.get_outflow">
+<span class="sig-name descname"><span class="pre">get_outflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.get_outflow" title="Link to this definition"></a></dt>
+<dd><p>Calculates the outflow rate from the component.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: The outflow rate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.remove_tritium">
+<span class="sig-name descname"><span class="pre">remove_tritium</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.remove_tritium" title="Link to this definition"></a></dt>
+<dd><p>Removes tritium from the component’s inventory.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>amount (float): The amount of tritium to remove.</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: The actual amount of tritium removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.store_flows">
+<span class="sig-name descname"><span class="pre">store_flows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.store_flows" title="Link to this definition"></a></dt>
+<dd><p>Stores the inflow and outflow rates of the component.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.component.Component.update_inventory">
+<span class="sig-name descname"><span class="pre">update_inventory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.component.Component.update_inventory" title="Link to this definition"></a></dt>
+<dd><p>Updates the tritium inventory of the component.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>new_value (float): The new value of the tritium inventory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="breeding-blanket">
 <h1>Breeding Blanket<a class="headerlink" href="#breeding-blanket" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.openfc.components.breedingBlanket.BreedingBlanket">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.openfc.components.breedingBlanket.</span></span><span class="sig-name descname"><span class="pre">BreedingBlanket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residence_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_burn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TBR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_inventory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_radioactive_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.breedingBlanket.BreedingBlanket" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="fueling-system">
 <h1>Fueling System<a class="headerlink" href="#fueling-system" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.openfc.components.fuelingSystem.FuelingSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.openfc.components.fuelingSystem.</span></span><span class="sig-name descname"><span class="pre">FuelingSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_burn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TBE</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.fuelingSystem.FuelingSystem" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.fuelingSystem.FuelingSystem.get_outflow">
+<span class="sig-name descname"><span class="pre">get_outflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.fuelingSystem.FuelingSystem.get_outflow" title="Link to this definition"></a></dt>
+<dd><p>Calculate the outflow rate of the fueling system.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: The outflow rate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="plasma">
 <h1>Plasma<a class="headerlink" href="#plasma" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.openfc.components.plasma.Plasma">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.openfc.components.plasma.</span></span><span class="sig-name descname"><span class="pre">Plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_burn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TBE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_div</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.plasma.Plasma" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.plasma.Plasma.calculate_inventory_derivative">
+<span class="sig-name descname"><span class="pre">calculate_inventory_derivative</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.plasma.Plasma.calculate_inventory_derivative" title="Link to this definition"></a></dt>
+<dd><p>Calculate the derivative of the plasma inventory.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: The derivative of the plasma inventory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.components.plasma.Plasma.get_outflow">
+<span class="sig-name descname"><span class="pre">get_outflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.components.plasma.Plasma.get_outflow" title="Link to this definition"></a></dt>
+<dd><p>Calculate the outflow rate of the plasma.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: The outflow rate of the plasma.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="componentmap">
 <h1>ComponentMap<a class="headerlink" href="#componentmap" title="Link to this heading"></a></h1>
@@ -199,9 +389,89 @@ port (Port): The port of the component.</p>
 </section>
 <section id="simulate">
 <h1>Simulate<a class="headerlink" href="#simulate" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.openfc.simulate.</span></span><span class="sig-name descname"><span class="pre">Simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I_reserve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_simulations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TBRr_accuraty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_doubling_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.adaptive_timestep">
+<span class="sig-name descname"><span class="pre">adaptive_timestep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.adaptive_timestep" title="Link to this definition"></a></dt>
+<dd><p>Perform adaptive time stepping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.compute_doubling_time">
+<span class="sig-name descname"><span class="pre">compute_doubling_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.compute_doubling_time" title="Link to this definition"></a></dt>
+<dd><p>Compute the doubling time of the tritium inventory in the Fueling System component.</p>
+<p>Args:
+- t: Array of time values.
+- y: Array of component inventory values.</p>
+<p>Returns:
+- doubling_time: The doubling time of the tritium inventory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.f">
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.f" title="Link to this definition"></a></dt>
+<dd><p>Calculate the derivative of component inventory.</p>
+<p>Args:
+- y: Array of component inventory values.</p>
+<p>Returns:
+- dydt: Array of derivative values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.forward_euler">
+<span class="sig-name descname"><span class="pre">forward_euler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.forward_euler" title="Link to this definition"></a></dt>
+<dd><p>Perform the forward Euler integration method.</p>
+<p>Returns:
+- time: Array of time values.
+- y: Array of component inventory values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.restart">
+<span class="sig-name descname"><span class="pre">restart</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.restart" title="Link to this definition"></a></dt>
+<dd><p>Restart the simulation by resetting time and component inventory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.run" title="Link to this definition"></a></dt>
+<dd><p>Run the simulation.</p>
+<p>Returns:
+- t: Array of time values.
+- y: Array of component inventory values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.update_I_startup">
+<span class="sig-name descname"><span class="pre">update_I_startup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">margin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.update_I_startup" title="Link to this definition"></a></dt>
+<dd><p>Update the initial tritium inventory of the Fueling System component.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.openfc.simulate.Simulate.update_timestep">
+<span class="sig-name descname"><span class="pre">update_timestep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.simulate.Simulate.update_timestep" title="Link to this definition"></a></dt>
+<dd><p>Update the time step size.</p>
+<p>Args:
+- dt: New time step size.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="tools">
 <h1>Tools<a class="headerlink" href="#tools" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.openfc.tools.utils.visualize_connections">
+<span class="sig-prename descclassname"><span class="pre">src.openfc.tools.utils.</span></span><span class="sig-name descname"><span class="pre">visualize_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.openfc.tools.utils.visualize_connections" title="Link to this definition"></a></dt>
+<dd><p>Visualizes the connections between components in a component map.</p>
+<p>Parameters:
+- component_map (ComponentMap): The component map containing the components and connections.</p>
+<p>Returns:
+- None</p>
+</dd></dl>
+
 </section>
 
 
