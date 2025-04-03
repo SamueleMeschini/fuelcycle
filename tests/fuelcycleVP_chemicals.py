@@ -1,4 +1,4 @@
-from fuelingSystem import FuelingSystem
+from openfc.components.fuelingSystem import FuelingSystem
 from component import Component
 from plasma import Plasma
 from breedingBlanket import BreedingBlanket
