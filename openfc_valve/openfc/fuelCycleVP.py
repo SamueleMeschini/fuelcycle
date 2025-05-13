@@ -16,7 +16,8 @@ kb=1.380648e-23
 R = 8.314 #J/molK
 NA = R/kb
 
-LAMBDA = 1.73e-9 # Decay constant for tritium
+#LAMBDA = 1.73e-9 # Decay constant for tritium
+LAMBDA = 0
 AF = 0.7
 N_burn = 9.3e-7 * AF # Tritium burn rate in the plasma adjusted for AF - THIS IS IMPACTING THE RESERVE INVENTORY
 TBR = 1.073
@@ -50,7 +51,7 @@ hx_to_BB = 1 - hx_to_fw - hx_to_div - hx_to_ds
 
 # General input parameters
 I_startup = 1.1
-TBE = 0.02
+TBE = 0.05
 #final_time = 3600*24
 final_time = 1/12 * 3600 * 24 * 365 # NB: longer than doubling time
 q = 0.25
@@ -65,13 +66,13 @@ max_hydrogen_pump_capacity = 1.7e3*6 #flammability limit (?)
 #max_hydrogen_pump_capacity = max_pump_capacity
 nominal_pumping_speed = 60 #m^3/s relative to protium
 regeneration_time = 600
-partial_pressure = 0.01 #Pa (PEGs)
+partial_pressure = 0.1 #Pa (PEGs)
 
-Tritium = Element("Tritium", 3.01605*2, nominal_pumping_speed, partial_pressure, 0.4)
-Deuterium = Element("Deuterium", 2.01309*2, nominal_pumping_speed, partial_pressure, 0.382978724)
-Helium = Element("Helium", 4.002602, nominal_pumping_speed, partial_pressure, 0.142857143)
-Neon = Element("Neon", 20.1797, nominal_pumping_speed, partial_pressure, 0.4)
-Argon = Element("Argon", 39.948, nominal_pumping_speed, partial_pressure, 0.4)
+Tritium = Element("Tritium", 3.01605*2, nominal_pumping_speed, partial_pressure, 0.4, 0)
+Deuterium = Element("Deuterium", 2.01309*2, nominal_pumping_speed, partial_pressure, 0.382978724, 0.5)
+Helium = Element("Helium", 4.002602, nominal_pumping_speed, partial_pressure, 0.142857143, 1)
+Neon = Element("Neon", 20.1797, nominal_pumping_speed, partial_pressure, 0.4, 0)
+Argon = Element("Argon", 39.948, nominal_pumping_speed, partial_pressure, 0.4, 0)
 CS = ChemicalSpecies()
 CS.add_species(Tritium)
 CS.species["Tritium"].radioactive_loss = LAMBDA
@@ -79,28 +80,28 @@ CS.add_species(Deuterium)
 CS.add_species(Helium)
 CS.add_species(Neon)
 CS.add_species(Argon)
-SIGMA_HeT = CS.species["Helium"].pumping_speed/CS.species["Tritium"].pumping_speed
-f_HeT_div = TBE/(1-TBE)/SIGMA_HeT
+#SIGMA_HeT = CS.species["Helium"].pumping_speed/CS.species["Tritium"].pumping_speed
+#f_HeT_div = TBE/(1-TBE)/SIGMA_HeT
 #I need to insert manually partial pressure becuase I need f_HeT_div from SIGMA_HeT which in turns needs me to first define the species 
-CS.species["Tritium"].partial_pressure = N_burn/(CS.species["Tritium"].molecular_mass/1e3)*NA*((1-TBE)/TBE)/(CS.species["Tritium"].pumping_speed)*kb*273.15
-CS.species["Deuterium"].partial_pressure = N_burn/(CS.species["Tritium"].molecular_mass/1e3)*NA*((1-TBE)/TBE)/(CS.species["Deuterium"].pumping_speed)*kb*273.15
-CS.species["Helium"].partial_pressure = CS.species["Tritium"].partial_pressure*f_HeT_div
-for specie in CS.species.keys(): 
-    CS.species[specie].get_density(273.15)
-    print(f"{specie} partial pressure: {CS.species[specie].partial_pressure}")
-    print(f"{specie} density {CS.species[specie].density}")
-CS.get_intake_coefficients()
+#CS.species["Tritium"].partial_pressure = N_burn/(CS.species["Tritium"].molecular_mass/1e3)*NA*((1-TBE)/TBE)/(CS.species["Tritium"].pumping_speed)*kb*273.15
+#CS.species["Deuterium"].partial_pressure = N_burn/(CS.species["Tritium"].molecular_mass/1e3)*NA*((1-TBE)/TBE)/(CS.species["Deuterium"].pumping_speed)*kb*273.15
+#CS.species["Helium"].partial_pressure = CS.species["Tritium"].partial_pressure*f_HeT_div
+#for specie in CS.species.keys(): 
+    #CS.species[specie].get_density(273.15)
+    #print(f"{specie} partial pressure: {CS.species[specie].partial_pressure}")
+    #print(f"{specie} density {CS.species[specie].density}")
+
 
 
 
 fueling_system = FuelingSystem("Fueling System", N_burn, TBE, initial_inventory=I_startup)
+VP = CryopumpSystem("VP", max_pump_capacity, max_hydrogen_pump_capacity, nominal_pumping_speed, regeneration_time, CS, 0, TBE, N_burn)
 BB = BreedingBlanket("BB", tau_bb, initial_inventory=0, N_burn = N_burn, TBR = TBR)
 FW = Component("FW", residence_time = tau_FW)
 divertor = Component("Divertor", residence_time = tau_div)
 fuel_cleanup = Component("Fuel cleanup", tau_fc)
 plasma = Plasma("Plasma", N_burn, TBE, fp_fw=fp_fw, fp_div=fp_div)   
 TES = Component("TES", residence_time = tau_tes)
-VP = CryopumpSystem("VP", max_pump_capacity, max_hydrogen_pump_capacity, nominal_pumping_speed, regeneration_time, CS, 0)
 HX = Component("HX", residence_time = tau_HX)
 DS = Component("DS", residence_time = tau_ds)
 ISS = Component("ISS", residence_time = tau_iss)
@@ -153,6 +154,7 @@ port42 = divertor.add_input_port("Port 42", incoming_fraction=fp_div)
 # Add components to component map
 component_map = ComponentMap()
 component_map.add_component(fueling_system)
+component_map.add_component(VP)
 component_map.add_component(BB)
 component_map.add_component(fuel_cleanup)
 component_map.add_component(plasma)
@@ -161,7 +163,6 @@ component_map.add_component(HX)
 component_map.add_component(FW)
 component_map.add_component(divertor)
 component_map.add_component(DS)
-component_map.add_component(VP)
 component_map.add_component(ISS)
 component_map.add_component(membrane)
 
@@ -187,11 +188,11 @@ component_map.connect_ports(ISS, port36, DS, port35)
 component_map.connect_ports(fueling_system, port39, FW, port41)
 component_map.connect_ports(fueling_system, port40, divertor, port42)
 
-component_map.print_connected_map()
+#component_map.print_connected_map()
 #visualize_connections(component_map)
 #print(f'Startup inventory is: {fueling_system.tritium_inventory}')
 simulation = Simulate(dt=100, dt_max = 100, final_time=final_time, I_reserve=I_reserve, component_map=component_map, CS=CS, max_simulations=2, TBRr_accuraty = 1e-1)
-t, y = simulation.run(CS)
+t, y = simulation.run(CS, TBE, N_burn)
 # np.savetxt('tritium_inventory.txt', [t,y], delimiter=',')
 
 combinations = [
@@ -210,6 +211,10 @@ plt.show()
 
 #VP.plot_inventories(CS)
 VP.plot_inventories_togheter(CS)
+VP.plot_dynamic_pumping_speed(CS)
+VP.plot_desorption_throughput()
+VP.plot_partial_pressure_evolution(CS, TBE)
+VP.plot_density_evolution(CS, TBE)
 print(f"Component inventories: {component_map.components.keys()}: {y[-1]}\n")
 print(f"TBR = {TBR}\n")
 print(f"numero di pompe: {len(VP.pumps)}\n")

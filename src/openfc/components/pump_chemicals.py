@@ -1,5 +1,5 @@
 import numpy as np
-from chemical_species import ChemicalSpecies
+from components.chemical_species import ChemicalSpecies
 
 class Pump:
     """

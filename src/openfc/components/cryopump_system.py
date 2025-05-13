@@ -1,10 +1,10 @@
 import numpy as np
-from component import (Component)
+from components.component import Component
 import time as tp
 from matplotlib import pyplot as plt
-from chemical_species import ChemicalSpecies
-from chemical_species import Element
-from pump_chemicals import Pump
+from components.chemical_species import ChemicalSpecies
+from components.chemical_species import Element
+from components.pump_chemicals import Pump
 
 kb = 1.380648e-23
 R = 8.314  # J/molK
@@ -96,6 +96,7 @@ class CryopumpSystem(Component):
         self.active_pumps.append(pump)
 
     def update_pumps(self, a, dt, time, CS):
+    
         """
         Updates the existing pumps and checks if new ones are needed.
 
@@ -110,6 +111,7 @@ class CryopumpSystem(Component):
         CS : ChemicalSpecies
             The chemical species involved in the cryopump system.
         """
+        CS.get_intake_coefficients()
         total_tritium_inflow = self.get_inflow() * dt  # tritium kg
         mass_tritium_outflow = 0  # Total outflow
         for pump in self.pumps:
@@ -123,7 +125,7 @@ class CryopumpSystem(Component):
                     pump.max_capacity - pump.total_inventory,
                     (pump.max_hydrogen_capacity - pump.hydrogen_throughput_inventory) / CS.hydrogen_throughput_intake_coefficient
                 )
-                if pump.total_inventory > 0 and intake < 1e-10:
+                if pump.total_inventory > 0 and intake < 1e-12:
                     pump.temporary_total_inventory = pump.total_inventory
                     pump.active = False
                     pump.regenerating = True
@@ -137,16 +139,18 @@ class CryopumpSystem(Component):
                     self.pump_deactivation(pump)
 
         for pump in self.pumps:
-            if pump.regenerating:
-                if not pump.stand_by:
-                    intake = -min(pump.temporary_total_inventory / pump.regeneration_time * dt, pump.total_inventory)
+            if pump.regenerating == True:
+                if pump.stand_by == True:
+                    pass
+                else:
+                    intake = -min(pump.temporary_total_inventory/pump.regeneration_time*dt, pump.total_inventory)
                     pump.update_inventory(intake, CS, time, dt)
-                    mass_tritium_outflow -= CS.species["Tritium"].mass_intake  # positive number, kg
+                    mass_tritium_outflow -= CS.species["Tritium"].mass_intake #positive number, kg
                     pump.regen_time_left -= dt
                     if pump.total_inventory <= 0:
                         self.pump_activation(pump)
 
-        if total_tritium_inflow > 1e-12:
+        while total_tritium_inflow > 1e-12:
             self.add_pump(CS)
             CS.get_throughput_inflow(total_tritium_inflow)
             intake = min(CS.total_throughput * dt, CS.total_throughput_inflow)
