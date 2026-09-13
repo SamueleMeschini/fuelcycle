@@ -39,7 +39,21 @@ class ComponentMap:
         self.connections[component2.name][port2.name] = (component1.name, port1.name)
         if port1 and port2:
                 port1.set_flow_rate(component1.get_outflow())
-                port2.set_flow_rate(component1.get_outflow() * port2.incoming_fraction)
+        else:
+            raise ValueError(" ----- Invalid port configuration -----")
+                # port2.set_flow_rate(component1.get_outflow() * port2.incoming_fraction)
+        if port2.incoming_fraction == 1 and port1.outgoing_fraction == 1.0:
+            port2.set_flow_rate(component1.get_outflow())
+        elif port2.incoming_fraction < 1 and port1.outgoing_fraction == 1.0:
+            port2.set_flow_rate(component1.get_outflow() * port2.incoming_fraction)
+        elif port2.incoming_fraction == 1.0 and port1.outgoing_fraction < 1.0:
+            port2.set_flow_rate(component1.get_outflow() * port1.outgoing_fraction)
+        elif port2.incoming_fraction < 1 and port1.outgoing_fraction < 1.0:
+            port2.set_flow_rate(component1.get_outflow() * port1.outgoing_fraction * port2.incoming_fraction)
+            print(f" ----- Check out flow rate configuration - both incoming and outgoing fractions are less than 1.0 ----- in {component1.name} and {component2.name} -----")
+        else:
+            raise ValueError(" ----- Invalid flow rate configuration -----")
+
 
     def disconnect_ports(self, component1, port1, component2, port2):
         """
@@ -86,8 +100,9 @@ class ComponentMap:
                     port = component.output_ports[port_name]
                     connected_component = self.components[connected_component_name]
                     connected_port = connected_component.input_ports[connected_port_name]
-                    port.set_flow_rate(component.get_outflow())
-                    connected_port.set_flow_rate(component.get_outflow() * connected_port.incoming_fraction)
+                    port.set_flow_rate(component.get_outflow() * port.outgoing_fraction)
+                    connected_port.set_flow_rate(component.get_outflow() * connected_port.incoming_fraction * port.outgoing_fraction)
+
 
     def print_connected_map(self):
         """

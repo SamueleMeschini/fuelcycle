@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OpenFC"
+authors = [
+    {name = "Samuele Meschini", email = "samuele.meschini@polito.it"}
+]
+description = "Fusion fuel cycles model"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "numpy",
+    "networkx",
+    "matplotlib"
+]

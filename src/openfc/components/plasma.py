@@ -1,7 +1,7 @@
-from component import Component
+from .component import Component
 
 class Plasma(Component):
-    def __init__(self, name, N_burn, TBE, **kwargs):
+    def __init__(self, name, N_burn, TBE, fp_fw, fp_div, **kwargs):
         """
         Initialize a Plasma object.
 
@@ -10,21 +10,13 @@ class Plasma(Component):
             N_burn (float): The burn rate of the plasma.
             TBE (float): The tritium burnup efficiency of the plasma.
             **kwargs: Additional keyword arguments.
-
+Z
         """
         super().__init__(name, residence_time=1, **kwargs)
         self.N_burn = N_burn
         self.TBE = TBE
-
-    def get_inflow(self):
-        """
-        Calculate the inflow rate of the plasma.
-
-        Returns:
-            float: The inflow rate of the plasma.
-
-        """
-        return self.N_burn / self.TBE
+        self.fp_fw = fp_fw
+        self.fp_div = fp_div
 
     def get_outflow(self):
         """
@@ -34,7 +26,7 @@ class Plasma(Component):
             float: The outflow rate of the plasma.
 
         """
-        return (1 - self.TBE) / self.TBE * self.N_burn
+        return (1 - self.TBE - self.fp_div - self.fp_fw) / self.TBE * self.N_burn 
     
     def calculate_inventory_derivative(self):
         """
@@ -46,5 +38,5 @@ class Plasma(Component):
         """
         inflow = self.get_inflow()
         outflow = self.get_outflow()
-        dydt = inflow - outflow + self.tritium_source - self.N_burn
+        dydt = inflow - outflow  - self.N_burn
         return dydt

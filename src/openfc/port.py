@@ -1,5 +1,5 @@
 class Port:
-    def __init__(self, name, incoming_fraction=1.0):
+    def __init__(self, name, incoming_fraction=1.0, outgoing_fraction=1.0):
         """
         Initialize a Port object.
 
@@ -10,6 +10,7 @@ class Port:
         self.name = name
         self.flow_rate = 0
         self.incoming_fraction = incoming_fraction
+        self.outgoing_fraction = outgoing_fraction
         
     def set_flow_rate(self, flow_rate):
         """

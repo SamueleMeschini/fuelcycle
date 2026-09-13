@@ -2,7 +2,7 @@ import numpy as np
 seconds_to_years = 1/(60*60*24*365)
 
 class Simulate:
-    def __init__(self, dt, final_time, I_reserve, component_map, TBRr_accuraty = 1e-2, target_doubling_time = 2):
+    def __init__(self, dt, final_time, I_reserve, component_map, dt_max=100, max_simulations = 100, TBRr_accuraty = 1e-3, target_doubling_time = 2):
         """
         Initialize the Simulate class.
 
@@ -12,6 +12,8 @@ class Simulate:
         - component_map: Mapping of component names to Component objects.
         """
         self.dt = dt
+        self.initial_step_size = dt
+        self.dt_max = dt_max
         self.final_time = final_time
         self.time = []
         self.initial_conditions = {name: component.tritium_inventory for name, component in component_map.components.items()}
@@ -24,8 +26,10 @@ class Simulate:
         self.target_doubling_time = target_doubling_time # years 
         self.doubling_time = None
         self.I_reserve = I_reserve
+        self.simulation_count = 0
+        self.max_simulations = max_simulations
 
-    def run(self):
+    def run(self, tolerance = 1e-3):
         """
         Run the simulation.
 
@@ -34,17 +38,23 @@ class Simulate:
         - y: Array of component inventory values.
         """
         while True:
+            self.simulation_count += 1
             self.y[0] = [component.tritium_inventory for component in self.components.values()] # self.initial_conditions, possibly updated by the restart method
             t,y = self.forward_euler()
             self.doubling_time = self.compute_doubling_time(t,y)
             print(f"Doubling time: {self.doubling_time} \n")
             print('Startup inventory is: {} \n'.format(y[0][0]))
-            if (np.array(self.y)[:,0] - self.I_reserve < 0).any(): # Increaase startup inventory if at any point the tritium inventory in the Fueling System component is below zero
-                print("Error: Tritium inventory in Fueling System is below zero. Difference is {} kg".format(np.min(np.array(self.y)[:,0] - self.I_reserve)))
-                self.update_I_startup()
+            if (np.array(self.y)[:,0] - self.I_reserve < -tolerance).any() and self.simulation_count < self.max_simulations: # Increaase startup inventory if at any point the tritium inventory in the Fueling System component is below zero
+                # self.y.pop() # remove the last element of y whose time is greater than the final time
+                # return t,y
+                difference = np.min(np.array(self.y)[:,0] - self.I_reserve)
+                print("Error: Tritium inventory in Fueling System is below zero. Difference is {} kg".format(difference))
+                self.update_I_startup(difference)
                 print(f"Updated I_startup to {self.I_startup}")
                 self.restart()
-            elif self.doubling_time >= self.target_doubling_time or np.isnan(self.doubling_time):
+            elif self.doubling_time >= self.target_doubling_time or np.isnan(self.doubling_time) and self.simulation_count < self.max_simulations:
+                # self.y.pop() # remove the last element of y whose time is greater than the final time
+                # return t,y
                 self.restart()
                 self.components['BB'].TBR += self.TBRr_accuracy
                 print('Updated TBR at {}. Production is now {}'.format(self.components['BB'].TBR, self.components['BB'].tritium_source))
@@ -70,14 +80,14 @@ class Simulate:
         if len(doubling_time_index) == 0:
             return np.nan
         else:
-            doubling_time = t[doubling_time_index[0]]* seconds_to_years
+            doubling_time = t[doubling_time_index[0]] * seconds_to_years
             return doubling_time
     
-    def update_I_startup(self):
+    def update_I_startup(self, margin):
         """
         Update the initial tritium inventory of the Fueling System component.
         """
-        self.I_startup += 0.1
+        self.I_startup -= margin
         self.initial_conditions['Fueling System'] = self.I_startup
 
     def update_timestep(self, dt):
@@ -91,7 +101,7 @@ class Simulate:
         self.n_steps = int(self.final_time / dt)
 
 
-    def adaptive_timestep(self,y_new, y, t, tol=1e-6, max_dt=100, min_dt=1e-6):
+    def adaptive_timestep(self,y_new, y, t, tol=1e-6, min_dt=1e-6):
         """
         Perform adaptive time stepping.
         """
@@ -102,7 +112,10 @@ class Simulate:
         if abs(t % self.interval) < 10:
             print(f"Time = {t}, Error = {error}, dt = {self.dt}, dt_new = {dt_new}", end='\r')
         # Compute the new time step size based on the definition of adaptive timestep
-        dt_new = min(max_dt, max(min_dt, dt_new))
+        if t < 1000:
+            dt_new = min(10, max(min_dt, dt_new))
+        else:
+            dt_new = min(self.dt_max, max(min_dt, dt_new))
         self.update_timestep(dt_new)
 
     def restart(self):
@@ -111,6 +124,7 @@ class Simulate:
         """
         self.time = []
         self.y = []
+        self.dt = self.initial_step_size
         for component, initial_condition in zip(self.components.values(), self.initial_conditions.values()):
             component.tritium_inventory = initial_condition
         self.y = [list(self.initial_conditions.values())]
@@ -126,6 +140,9 @@ class Simulate:
         t = 0
         print(f'Initial inventories = {self.y[0]} kg')
         while t < self.final_time:
+            # Store flows
+            for component in self.components.values():
+                component.store_flows()
             if abs(t % self.interval) < 10:
                 print(f"Percentage completed = {abs(t - self.final_time)/self.final_time * 100:.1f}%", end='\r')
             dydt = self.f(self.y[-1])

@@ -1,12 +1,21 @@
-from port import Port
-LAMBDA = 1.73e-9 # Decay constant for tritium
+from openfc.port import Port
+
+LAMBDA = 1.73e-9  # Decay constant for tritium
+
 
 class Component:
     """
     Represents a component in a fuel cycle system.
     """
 
-    def __init__(self, name, residence_time, initial_inventory=0, tritium_source=0, non_radioactive_loss=1e-4):
+    def __init__(
+        self,
+        name,
+        residence_time,
+        initial_inventory=1e-12,
+        tritium_source=0,
+        non_radioactive_loss=1e-4,
+    ):
         """
         Initializes a Component object.
 
@@ -18,11 +27,19 @@ class Component:
         """
         self.name = name
         self.residence_time = residence_time
-        self.input_ports = {}  # Dictionary where the key is the port name and the value is the port object
-        self.output_ports = {}  # Dictionary where the key is the port name and the value is the port object
+        self.input_ports = (
+            {}
+        )  # Dictionary where the key is the port name and the value is the port object
+        self.output_ports = (
+            {}
+        )  # Dictionary where the key is the port name and the value is the port object
         self.tritium_inventory = initial_inventory
         self.tritium_source = tritium_source
         self.non_radioactive_loss = non_radioactive_loss
+        # self.AF = AF
+        self.inflow = []
+        self.outflow = []
+        # super().__init__()
 
     def add_input_port(self, port_name, incoming_fraction=1.0):
         """
@@ -42,7 +59,7 @@ class Component:
         self.input_ports[port_name] = port
         return port
 
-    def add_output_port(self, port_name):
+    def add_output_port(self, port_name, outgoing_fraction=1.0):
         """
         Adds an output port to the component.
 
@@ -52,7 +69,10 @@ class Component:
         Returns:
             Port: The created output port object.
         """
+        if not (0 <= outgoing_fraction <= 1):
+            raise ValueError("Incoming fraction must be between 0 and 1")
         port = Port(port_name)
+        port.outgoing_fraction = outgoing_fraction
         self.output_ports[port_name] = port
         return port
 
@@ -91,7 +111,7 @@ class Component:
             removed_amount = self.tritium_inventory
             self.tritium_inventory = 0
             return removed_amount
-        
+
     def get_inflow(self):
         """
         Calculates the total inflow rate to the component.
@@ -102,8 +122,8 @@ class Component:
         inflow = 0
         for port in self.input_ports.values():
             inflow += port.flow_rate
-        return inflow   
-        
+        return inflow
+
     def get_outflow(self):
         """
         Calculates the outflow rate from the component.
@@ -112,7 +132,7 @@ class Component:
             float: The outflow rate.
         """
         return self.tritium_inventory / self.residence_time
-    
+
     def calculate_inventory_derivative(self):
         """
         Calculates the derivative of the tritium inventory with respect to time.
@@ -122,10 +142,15 @@ class Component:
         """
         inflow = self.get_inflow()
         outflow = self.get_outflow()
-        decay = self.tritium_inventory * LAMBDA 
-        dydt = inflow - outflow * (1 + self.non_radioactive_loss) - decay + self.tritium_source
+        decay = self.tritium_inventory * LAMBDA
+        dydt = (
+            inflow
+            - outflow * (1 + self.non_radioactive_loss)
+            - decay
+            + self.tritium_source
+        )
         return dydt
-    
+
     def update_inventory(self, new_value):
         """
         Updates the tritium inventory of the component.
@@ -134,3 +159,10 @@ class Component:
             new_value (float): The new value of the tritium inventory.
         """
         self.tritium_inventory = new_value
+
+    def store_flows(self):
+        """
+        Stores the inflow and outflow rates of the component.
+        """
+        self.inflow.append(self.get_inflow())
+        self.outflow.append(self.get_outflow())
