@@ -1,18 +1,53 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "OpenFC"
+name = "openfc"
 authors = [
     {name = "Samuele Meschini", email = "samuele.meschini@polito.it"}
 ]
-description = "Fusion fuel cycles model"
+description = "A Python model for fusion-plant tritium fuel cycles"
 version = "0.0.1"
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.7"
 dependencies = [
-    "numpy",
-    "networkx",
-    "matplotlib"
+    "numpy>=1.20",
+    "networkx>=2.8",
+    "matplotlib>=3.5",
 ]
+
+[project.urls]
+Documentation = "https://samulemeschini.github.io/fuel-cycle-python/"
+Repository = "https://github.com/SamueleMeschini/fuel-cycle-python"
+Issues = "https://github.com/SamueleMeschini/fuel-cycle-python/issues"
+
+[project.scripts]
+openfc = "openfc.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "ruff>=0.5",
+]
+docs = [
+    "myst-parser>=2",
+    "sphinx>=7",
+    "sphinx-rtd-theme>=2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py37"
+
+[tool.ruff.lint.per-file-ignores]
+"src/openfc/simulate.py" = ["E741"]

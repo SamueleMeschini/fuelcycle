@@ -38,6 +38,15 @@ The case is intentionally long-running and opens a Matplotlib plot. Adjust `fina
 the timestep, or the simulation limits in that file when developing or running a short
 smoke test.
 
+## Command line
+
+The package exposes a small command-line entry point for installation and version checks:
+
+```bash
+openfc info
+openfc --version
+```
+
 ## Documentation
 
 API documentation is configured with Sphinx. Install the dependencies, then build the HTML

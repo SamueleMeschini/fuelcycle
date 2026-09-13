@@ -1,0 +1,7 @@
+-r requirements.txt
+wheel>=0.40
+pytest>=7
+ruff>=0.5
+sphinx>=7
+sphinx-rtd-theme>=2
+myst-parser>=2
