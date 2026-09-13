@@ -5,5 +5,5 @@ Welcome to openfc's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   myproject
+   api
 
